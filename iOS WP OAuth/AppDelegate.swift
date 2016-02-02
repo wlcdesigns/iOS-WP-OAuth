@@ -4,7 +4,7 @@
 //
 //  Created by wlc on 1/10/16.
 //  Copyright © 2016 wLc Designs. All rights reserved.
-//
+// 
 
 import UIKit
 
@@ -12,10 +12,34 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let defaults = NSUserDefaults.standardUserDefaults()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //Use for testing and debugging
+        //defaults.removeObjectForKey("accessToken")
+        //defaults.removeObjectForKey("refreshToken")
+        
+        //Gather up the View Controllers
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let profileViewController: ProfileViewController = mainStoryboard.instantiateViewControllerWithIdentifier("ProfileController") as! ProfileViewController
+        let loginViewController: LoginViewController = mainStoryboard.instantiateViewControllerWithIdentifier("LoginController") as! LoginViewController
+  
+        //Access Tokens are legit? Show Profile View Controller
+        guard defaults.stringForKey("accessToken") != nil && defaults.stringForKey("refreshToken") != nil else{
+            
+            //else make them login
+            self.window?.rootViewController = loginViewController
+            self.window?.makeKeyAndVisible()
+            
+            return false
+        }
+        
+        self.window?.rootViewController = profileViewController
+        self.window?.makeKeyAndVisible()
+        
         return true
     }
 

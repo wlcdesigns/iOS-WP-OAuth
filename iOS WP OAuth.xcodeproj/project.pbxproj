@@ -8,12 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		7F12A69D1C436DED00E0AA13 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F12A69C1C436DED00E0AA13 /* AppDelegate.swift */; };
-		7F12A69F1C436DED00E0AA13 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F12A69E1C436DED00E0AA13 /* ViewController.swift */; };
 		7F12A6A21C436DED00E0AA13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F12A6A01C436DED00E0AA13 /* Main.storyboard */; };
 		7F12A6A41C436DED00E0AA13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F12A6A31C436DED00E0AA13 /* Assets.xcassets */; };
 		7F12A6A71C436DED00E0AA13 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F12A6A51C436DED00E0AA13 /* LaunchScreen.storyboard */; };
 		7F12A6B21C436DED00E0AA13 /* iOS_WP_OAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F12A6B11C436DED00E0AA13 /* iOS_WP_OAuthTests.swift */; };
 		7F12A6BD1C436DEE00E0AA13 /* iOS_WP_OAuthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F12A6BC1C436DEE00E0AA13 /* iOS_WP_OAuthUITests.swift */; };
+		7F1A56171C5AD65F000EDFF4 /* OAuthWP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1A56161C5AD65F000EDFF4 /* OAuthWP.swift */; };
+		7F6F896D1C4F22C00044E480 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6F896C1C4F22C00044E480 /* LoginViewController.swift */; };
+		7F8EA3761C5990170029912A /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EA3751C5990170029912A /* EventHandler.swift */; };
+		7FF49F801C45F3F400605BF6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF49F7F1C45F3F400605BF6 /* ProfileViewController.swift */; };
+		C21E00BC832CE865C11ABD73 /* Pods_iOS_WP_OAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCC2B6079901A223B81BEE08 /* Pods_iOS_WP_OAuth.framework */; };
+		EF69DB102E648E0E0AC85A61 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E382265C2E068865FC1C9CF /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E382265C2E068865FC1C9CF /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A9E9C474932ABD4CF7B0932 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		7F12A6991C436DED00E0AA13 /* iOS WP OAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS WP OAuth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F12A69C1C436DED00E0AA13 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7F12A69E1C436DED00E0AA13 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7F12A6A11C436DED00E0AA13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7F12A6A31C436DED00E0AA13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7F12A6A61C436DED00E0AA13 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +53,12 @@
 		7F12A6B81C436DEE00E0AA13 /* iOS WP OAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS WP OAuthUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F12A6BC1C436DEE00E0AA13 /* iOS_WP_OAuthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOS_WP_OAuthUITests.swift; sourceTree = "<group>"; };
 		7F12A6BE1C436DEE00E0AA13 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7F1A56161C5AD65F000EDFF4 /* OAuthWP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthWP.swift; sourceTree = "<group>"; };
+		7F6F896C1C4F22C00044E480 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7F8EA3751C5990170029912A /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
+		7FF49F7F1C45F3F400605BF6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		813DA30FF91D8E5C13974088 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		CCC2B6079901A223B81BEE08 /* Pods_iOS_WP_OAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_WP_OAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF69DB102E648E0E0AC85A61 /* Pods.framework in Frameworks */,
+				C21E00BC832CE865C11ABD73 /* Pods_iOS_WP_OAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +88,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F1C9664B7036B0086FCA7DC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				813DA30FF91D8E5C13974088 /* Pods.debug.xcconfig */,
+				5A9E9C474932ABD4CF7B0932 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		54870CD4328FE9DD97DE80B7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E382265C2E068865FC1C9CF /* Pods.framework */,
+				CCC2B6079901A223B81BEE08 /* Pods_iOS_WP_OAuth.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7F12A6901C436DED00E0AA13 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +113,8 @@
 				7F12A6B01C436DED00E0AA13 /* iOS WP OAuthTests */,
 				7F12A6BB1C436DEE00E0AA13 /* iOS WP OAuthUITests */,
 				7F12A69A1C436DED00E0AA13 /* Products */,
+				2F1C9664B7036B0086FCA7DC /* Pods */,
+				54870CD4328FE9DD97DE80B7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,11 +132,14 @@
 			isa = PBXGroup;
 			children = (
 				7F12A69C1C436DED00E0AA13 /* AppDelegate.swift */,
-				7F12A69E1C436DED00E0AA13 /* ViewController.swift */,
 				7F12A6A01C436DED00E0AA13 /* Main.storyboard */,
+				7F6F896C1C4F22C00044E480 /* LoginViewController.swift */,
+				7FF49F7F1C45F3F400605BF6 /* ProfileViewController.swift */,
+				7F1A56161C5AD65F000EDFF4 /* OAuthWP.swift */,
 				7F12A6A31C436DED00E0AA13 /* Assets.xcassets */,
 				7F12A6A51C436DED00E0AA13 /* LaunchScreen.storyboard */,
 				7F12A6A81C436DED00E0AA13 /* Info.plist */,
+				7F8EA3751C5990170029912A /* EventHandler.swift */,
 			);
 			path = "iOS WP OAuth";
 			sourceTree = "<group>";
@@ -132,9 +169,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7F12A6C11C436DEE00E0AA13 /* Build configuration list for PBXNativeTarget "iOS WP OAuth" */;
 			buildPhases = (
+				CF73BB01AD86C84F1CF2CF08 /* Check Pods Manifest.lock */,
 				7F12A6951C436DED00E0AA13 /* Sources */,
 				7F12A6961C436DED00E0AA13 /* Frameworks */,
 				7F12A6971C436DED00E0AA13 /* Resources */,
+				5D2338397D0170F2471F4F25 /* Embed Pods Frameworks */,
+				E2EB0E96FE516DC4607060F5 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -251,13 +291,64 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5D2338397D0170F2471F4F25 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOS WP OAuth/Pods-iOS WP OAuth-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CF73BB01AD86C84F1CF2CF08 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E2EB0E96FE516DC4607060F5 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOS WP OAuth/Pods-iOS WP OAuth-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7F12A6951C436DED00E0AA13 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F12A69F1C436DED00E0AA13 /* ViewController.swift in Sources */,
+				7F8EA3761C5990170029912A /* EventHandler.swift in Sources */,
 				7F12A69D1C436DED00E0AA13 /* AppDelegate.swift in Sources */,
+				7FF49F801C45F3F400605BF6 /* ProfileViewController.swift in Sources */,
+				7F1A56171C5AD65F000EDFF4 /* OAuthWP.swift in Sources */,
+				7F6F896D1C4F22C00044E480 /* LoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,9 +486,11 @@
 		};
 		7F12A6C21C436DEE00E0AA13 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 813DA30FF91D8E5C13974088 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "iOS WP OAuth/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.wlcdesigns.iOS-WP-OAuth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -406,9 +499,11 @@
 		};
 		7F12A6C31C436DEE00E0AA13 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A9E9C474932ABD4CF7B0932 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "iOS WP OAuth/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.wlcdesigns.iOS-WP-OAuth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -482,6 +577,7 @@
 				7F12A6C31C436DEE00E0AA13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F12A6C41C436DEE00E0AA13 /* Build configuration list for PBXNativeTarget "iOS WP OAuthTests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +586,7 @@
 				7F12A6C61C436DEE00E0AA13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F12A6C71C436DEE00E0AA13 /* Build configuration list for PBXNativeTarget "iOS WP OAuthUITests" */ = {
 			isa = XCConfigurationList;
@@ -498,6 +595,7 @@
 				7F12A6C91C436DEE00E0AA13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

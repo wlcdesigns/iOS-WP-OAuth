@@ -1,0 +1,6 @@
+framework module Pods_iOS_WP_OAuth {
+  umbrella header "Pods-iOS WP OAuth-umbrella.h"
+
+  export *
+  module * { export * }
+}
