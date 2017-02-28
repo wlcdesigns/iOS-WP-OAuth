@@ -12,25 +12,13 @@ import SwiftyJSON
 
 /*
  * Define "Certificate Pinning" constant
- * Try prepending "www" if your-secure-domain.com doesn't work
+ * Try prepending "www" if wlcdesigns.com doesn't work
  */
 
-let serverTrustPolicies: [String: ServerTrustPolicy] = [
-    "your-secure-domain.com": .PinCertificates(
-        certificates: ServerTrustPolicy.certificatesInBundle(),
-        validateCertificateChain: true,
-        validateHost: true
-    )
-]
-
-//Add certificate pinning to Alamofire
-let manager = Manager(
-    configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-    serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies)
-)
 
 //Site Url: this is a full link, not a domain
-let siteUrl = "https://your-secure-domain.com/" //include forward slash at the end
+let url = "https://your-domain.com"
+let siteUrl = url+"/" //include forward slash at the end
 
 //OAuth Links
 let oauthLinks:[String:String] = [
@@ -47,7 +35,7 @@ let oauthLinks:[String:String] = [
  */
 
 protocol 🕵 {
-    typealias PropertyType
+    associatedtype PropertyType
     var propertyChanged: Event<PropertyType> { get }
 }
 
@@ -74,13 +62,14 @@ enum ObserverProperty: String {
 protocol wpOAuthProtocol
 {
     //Login to your self hosted WordPress installation
-    func login(username:String, password:String)
+    func login(_ username:String, password:String)
     
     //Run OAuth after successful login
-    func runOAuth(json:JSON)
+    func runOAuth(_ json:JSON)
     
     //Fetch User data after successful retreival of OAuth tokens
-    func getUserData(completionHandler:(String) -> ()) -> ()
+    //func getUserData(completionHandler:(String) -> ()) -> ()
+    func getUserData(completionHandler: @escaping (String) -> ()) -> ()
     
     //Check if Access Token is still valid
     func checkOauth()
@@ -93,53 +82,130 @@ protocol wpOAuthProtocol
     func refreshOAuth()
     
     //After token checks, update Display Name
-    func updateDisplayName(name:String)
+    func updateDisplayName(_ name:String)
     
 }
+
+/*
+ * Prevents the SessionaManager from getting deallocated 
+ * before certificate check
+ */
+class Session {
+    static let sharedInstance = Session()
+    
+    private var manager : SessionManager?
+    
+    func ApiManager()->SessionManager{
+        if let m = self.manager{
+            return m
+        }else{
+            
+            let configuration = URLSessionConfiguration.default
+            
+            //Define "Certificate Pinning" constant
+            let serverTrustPolicies: [String: ServerTrustPolicy] = [
+                url: .pinCertificates(
+                    certificates: ServerTrustPolicy.certificates(),
+                    validateCertificateChain: true,
+                    validateHost: true
+                ),
+                "localhost": .disableEvaluation
+            ]
+            
+            //Add certificate pinning to Session Manager
+            let tempmanager = Alamofire.SessionManager(configuration: configuration,serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
+            
+            self.manager = tempmanager
+            
+            return self.manager!
+        }
+    }
+}
+
 
 //Create struct based on wpOAuthProtocol protocol
 struct wpOauth: wpOAuthProtocol, 🕵
 {
+
+    internal func getUserData(completionHandler: @escaping (String) -> ()) {
+        ///get tokens function
+        guard let accessToken = defaults.string(forKey: "accessToken") else {
+            return
+        }
+        
+        print("getUserData")
+        Session.sharedInstance.ApiManager().request(oauthLinks["me"]!, method: .post, parameters: [
+            "access_token": accessToken
+            ]).validate().responseJSON { response in
+                
+            guard let data = response.result.value else{
+                //self.refreshOAuth()
+                //self.propertyChanged.raise(.NetworkError)
+                return
+            }
+                
+            let json = JSON(data)
+                
+            guard (json["error"].string != nil) else{
+
+                //Get username to be displayed in input field
+                guard let displayName = json["display_name"].string else{
+                    return
+                }
+
+                completionHandler(displayName)
+
+                return
+            }
+        }
+    }
+
     typealias PropertyType = ObserverProperty
     let propertyChanged = Event<ObserverProperty>()
     
     //We'll need to access NSUserDefaults
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
 
-    func login(username:String, password:String)
+    func login(_ username:String, password:String)
     {
-        manager.request(.POST, siteUrl, parameters: [
-            "ios_wp_login": 1,
-            "ios_userlogin":username,
-            "ios_userpassword":password
-            ]).responseJSON { response in
+        print("Login")
+        
+         Session.sharedInstance.ApiManager().request(siteUrl, method: .post, parameters: [
+            "wpoauth_login": 1,
+            "user_login":username,
+            "user_password":password
+            ]).validate().responseJSON { response in
                 
-                //Use for debugging
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                //print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                print(response.result.value)
+//                //Use for debugging
+//                print(response)
+//                print(response.request ?? "no request")  // original URL request
+//                print(response.response ?? "no response") // HTTP URL response
+//                print(response.data ?? "no data")     // server data
+//                print(response.result)
                 
                 guard let data = response.result.value else{
                     //Alert it there is a problem connecting to the host
+                    print("Login")
                     self.propertyChanged.raise(.NetworkError)
                     return
                 }
                 
                 let json = JSON(data)
+
+                print("login")
+                print(json)
                 
-                //Alert if there is a server-side login error
+               //Alert if there is a server-side login error
                 guard let err = json["error"].string else{
                     self.runOAuth(json)
-                    
-                    /* 
+
+                    /*
                      * Save user ID in the event you want
-                     * to use the WP REST API instead of 
+                     * to use the WP REST API instead of
                      * the WP OAUTH2 server "me" endpoint
                      * to retrieve additional user data
                      */
-                    
+
                     guard let id = json["ID"].int else{
                         //Alert it ID can't be retrieved
                         self.propertyChanged.raise(.SaveError)
@@ -155,34 +221,34 @@ struct wpOauth: wpOAuthProtocol, 🕵
         }
     }
     
-    func runOAuth(json:JSON)
+    func runOAuth(_ json:JSON)
     {
-        manager.request(.POST, siteUrl, parameters: [
+        print("runOauth")
+        
+        Session.sharedInstance.ApiManager().request(siteUrl, method: .post, parameters: [
             "ios_wp_oauth": 1,
-            "response_type": "code",
-            ]).responseJSON { response in
+            "response_type":"code"
+            ]).validate().responseJSON { response in
                 
                 guard let data = response.result.value else{
+                     print("runOauth")
                     self.propertyChanged.raise(.NetworkError)
                     return
                 }
-                
+
                 let json = JSON(data)
-                                
-                guard let code = json["code"].int where code == 200 else{
-                    //Alert it there is a problem connecting to the host
-                    self.propertyChanged.raise(.NetworkError)
-                    return
-                }
+                
+                //print("runOAuth")
+                //print(json)
                 
                 //Make sure we have successfully retrieved the tokens
-                guard json["result"]["access_token"].isEmpty || json["result"]["refresh_token"].isEmpty else{
+                guard !json["access_token"].isEmpty || !json["refresh_token"].isEmpty else{
                     self.propertyChanged.raise(.OAuthError)
                     return
                 }
-                
+
                 //Save tokens
-                guard let ac = json["result"]["access_token"].string, let rt = json["result"]["refresh_token"].string else{
+                guard let ac = json["access_token"].string, let rt = json["refresh_token"].string else{
                     self.propertyChanged.raise(.SaveError)
                     return
                 }
@@ -190,52 +256,29 @@ struct wpOauth: wpOAuthProtocol, 🕵
                 self.saveTokens(self.defaults, accessToken: ac,refreshToken:rt)
                 self.propertyChanged.raise(.Success)
         }
-        
-    }
-    
-    func getUserData(completionHandler: (String) -> ()) -> ()
-    {
-        ///get tokens function
-        guard let accessToken = defaults.stringForKey("accessToken") else {
-            return
-        }
-        
-        manager.request(.POST, oauthLinks["me"]!, parameters: [
-            "access_token": accessToken
-            ]).responseJSON { response in
-                
-                guard let data = response.result.value else{
-                    self.propertyChanged.raise(.NetworkError)
-                    return
-                }
-                
-                let json = JSON(data)
-                
-                guard (json["error"].string != nil) else{
-                    
-                    //Get username to be displayed in input field
-                    guard let displayName = json["display_name"].string else{
-                        return
-                    }
-                    
-                    completionHandler(displayName)
-                    
-                    return
-                }
-                
-        }
     }
     
     func checkOauth()
     {
-        guard let accessToken = defaults.stringForKey("accessToken") else {
+        print("Check OAuth")
+        
+        guard let accessToken = defaults.string(forKey: "accessToken") else {
             return
         }
         
-        manager.request(.POST, oauthLinks["me"]!, parameters: [
+        Session.sharedInstance.ApiManager().request(oauthLinks["me"]!, method: .post, parameters: [
             "access_token": accessToken
-            ]).responseJSON { response in
-                                
+            ]).validate().responseJSON { response in
+
+                switch response.result {
+                case .success:
+                    print("Validation Successful")
+                    print(response)
+                case .failure(let error):
+                    print(error)
+                    self.refreshOAuth()
+                }
+                
                 guard let data = response.result.value else{
                     self.propertyChanged.raise(.NetworkError)
                     return
@@ -248,95 +291,86 @@ struct wpOauth: wpOAuthProtocol, 🕵
                     self.propertyChanged.raise(.Success)
                     return
                 }
-                
-                self.refreshOAuth()
-                
         }
     }
     
     func refreshOAuth()
     {
-        guard let refreshToken = defaults.stringForKey("refreshToken") else {
+        print("Refreshing")
+        
+        guard let refreshToken = defaults.string(forKey: "refreshToken") else {
             return
         }
         
-        manager.request(.POST, oauthLinks["refresh"]!, parameters: [
+        Session.sharedInstance.ApiManager().request(oauthLinks["refresh"]!, method: .post, parameters: [
             "ios_wp_oauth": 2,
             "grant_type":"refresh_token",
             "refresh_token":refreshToken
-            ]).responseJSON { response in
+            ]).validate().responseJSON { response in
                 
-                /*
-                * Loose test for expired Refresh Token
-                * This can also be a Network Error
-                * Add checks accordingly
-                */
+            /*
+            * Loose test for expired Refresh Token
+            * This can also be a Network Error
+            * Add checks accordingly
+            */
                 
-                guard let data = response.result.value else{
-                    self.propertyChanged.raise(.NetworkError)
-                    return
-                }
-                
-                let json = JSON(data)
+            switch response.result {
+            case .success(let value):
 
-                guard json["error"] != nil else{
-                    
-                    guard let accessToken = json["access_token"].string else{
-                        self.propertyChanged.raise(.Fail)
-                        
-                        /*
-                        * If Access token is not present or
-                        * if there is an issue
-                        * delete tokens for a fresh start
-                        */
-                        
-                        self.removeTokens(self.defaults)
+                let json = JSON(value)
+
+                //print("Refresh JSON") //debug
+                //print(json)
+
+                 guard json["error"] != nil else{
+
+                    guard let ac = json["access_token"].string, let rt = json["refresh_token"].string else{
+                        self.propertyChanged.raise(.SaveError)
                         return
                     }
                     
-                    //Set New Access Token
-                    self.defaults.setObject(accessToken, forKey: "accessToken")
+                    self.saveTokens(self.defaults, accessToken: ac,refreshToken:rt)
                     self.propertyChanged.raise(.Success)
+                    
                     return
                 }
                 
                 /*
-                * If there is a refresh error
+                * If Access token is not present or
+                * if there is an issue
                 * delete tokens for a fresh start
                 */
-                
+
                 self.removeTokens(self.defaults)
                 self.propertyChanged.raise(.Fail)
                 
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     
-    func updateDisplayName(name:String)
+    func updateDisplayName(_ name:String)
     {
-        guard let accessToken = defaults.stringForKey("accessToken") else {
+        print("Update Display Name")
+        
+        guard let accessToken = defaults.string(forKey: "accessToken") else {
             return
         }
         
-        manager.request(.POST, oauthLinks["update-me"]!, parameters: [
+        Session.sharedInstance.ApiManager().request(oauthLinks["update-me"]!, method: .post, parameters: [
             "access_token": accessToken,
             "name":name
             ]).responseJSON { response in
                 
-                guard let data = response.result.value else{
-                    self.propertyChanged.raise(.NetworkError)
-                    return
-                }
-                
-                let json = JSON(data)
-                
-                guard (json["error"].string != nil) else{
-                    //Alert is Display name update was successful
+                switch response.result {
+                case .success:
                     self.propertyChanged.raise(.Updated)
                     return
+                case .failure:
+                    self.propertyChanged.raise(.Fail)
                 }
-                
-                self.propertyChanged.raise(.Fail)
-                
+        
         }
     }
 }
@@ -348,29 +382,32 @@ struct wpOauth: wpOAuthProtocol, 🕵
 
 extension wpOAuthProtocol
 {
-    func removeTokens(defaults:NSUserDefaults){
-        defaults.removeObjectForKey("accessToken")
-        defaults.removeObjectForKey("refreshToken")
+    func removeTokens(_ defaults:UserDefaults){
+        defaults.removeObject(forKey: "accessToken")
+        defaults.removeObject(forKey: "refreshToken")
     }
     
-    func saveUser(defaults:NSUserDefaults, ID:Int){
-        defaults.setObject(ID, forKey: "wp_id")
+    func saveUser(_ defaults:UserDefaults, ID:Int){
+        defaults.set(ID, forKey: "wp_id")
     }
     
-    func saveTokens(defaults:NSUserDefaults, accessToken:String, refreshToken:String){
-        defaults.setObject(accessToken, forKey: "accessToken")
-        defaults.setObject(refreshToken, forKey: "refreshToken")
+    func saveTokens(_ defaults:UserDefaults, accessToken:String, refreshToken:String){
+        defaults.set(accessToken, forKey: "accessToken")
+        defaults.set(refreshToken, forKey: "refreshToken")
     }
     
-    func OauthAlert(alertMessage: String, vc:AnyObject)
+    func OauthAlert(_ alertMessage: String, vc:UIViewController)
     {
-        let loginAlert = UIAlertController(title: "Alert:", message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+        let loginAlert = UIAlertController(title: "Alert:", message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
         
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default,handler: nil)
         
         loginAlert.addAction(okAction)
         
-        vc.presentViewController(loginAlert, animated: true, completion: nil)
+        if(vc.presentedViewController == nil){
+            vc.present(loginAlert, animated: true, completion: nil)
+        }
+        
     }
 }
 

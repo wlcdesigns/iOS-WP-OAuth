@@ -14,7 +14,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods.xcscheme</key>
+		<key>Spring.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -27,22 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>432ECC54282C84882B482CCB4CF227FC</key>
+		<key>0F7600588261C0C81E9B91CC365B6B25</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>57CFC4DF5A94826729A3A532FC59EE52</key>
+		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BB1CC01E358B7E977058D36F0217681C</key>
+		<key>B5F17FE7146919E0EC25E26CA09E8585</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D5E7960DE45230E0C0547A8A4E1380F8</key>
+		<key>E8BFA51D9D820510894553C9E7D9CD75</key>
 		<dict>
 			<key>primary</key>
 			<true/>

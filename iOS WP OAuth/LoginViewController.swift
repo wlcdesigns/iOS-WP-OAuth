@@ -21,23 +21,24 @@ class LoginViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    func onPropertyChanged(property: ObserverProperty) {
+    func onPropertyChanged(_ property: ObserverProperty) {
+        
+        print(property)
         
         if property == .Success{
-            self.performSegueWithIdentifier("ProfileController", sender: self)
+            self.performSegue(withIdentifier: "ProfileController", sender: self)
         }else{
             wpRunOauth.OauthAlert(property.rawValue, vc: self)
         }
-        
     }
     
-    @IBAction func loginWP(sender: AnyObject) {
+    @IBAction func loginWP(_ sender: AnyObject) {
         
         if !userName.text!.isEmpty && !passWord.text!.isEmpty {
             
             wpRunOauth.login(userName.text!, password:passWord.text!)
-            wpRunOauth.propertyChanged.addHandler(self, handler: LoginViewController.onPropertyChanged)
             
+            _ = wpRunOauth.propertyChanged.addHandler(self, handler: LoginViewController.onPropertyChanged)
         }
     }
     

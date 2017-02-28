@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import Spring
 
 class ProfileViewController: UIViewController {
     
@@ -20,37 +21,48 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         //RUN OAuth check
         wpRunOauth.checkOauth()
         
-        //Handle events from check
-        wpRunOauth.propertyChanged.addHandler(self, handler: ProfileViewController.onPropertyChanged)
-
-    }
-
-    func onPropertyChanged(property: ObserverProperty) {
-
-        if property == .Success{ //Set display name
+        wpRunOauth.getUserData(completionHandler: {
+            name in
             
-            wpRunOauth.getUserData({
+            print(name)
+            
+            self.displayName.text = name
+        })
+        
+        //Handle events from check
+        _ = wpRunOauth.propertyChanged.addHandler(self, handler: ProfileViewController.onPropertyChanged)
+    }
+    
+    func onPropertyChanged(_ property: ObserverProperty) {
+        
+        switch(property){
+        case .Success:
+            
+            wpRunOauth.getUserData(completionHandler: {
                 name in
                 
                 self.displayName.text = name
             })
+        break
             
-        }else if property == .Fail{ //Segue back to login screen
+        case .Fail:
+            self.performSegue(withIdentifier: "LoginController", sender: self)
+        break
             
-            self.performSegueWithIdentifier("LoginController", sender: self)
-            
-        }else{ //Display Alerts
-            
+        case .Updated:
             wpRunOauth.OauthAlert(property.rawValue, vc: self)
+        break
+            
+        default:
+            print("")
         }
-        
     }
     
-    @IBAction func updateDisplayName(sender: AnyObject) {
+    @IBAction func updateDisplayName(_ sender: AnyObject) {
         
         if !displayName.text!.isEmpty { //Update Display Name
              wpRunOauth.updateDisplayName(displayName.text!)
@@ -62,8 +74,6 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-
     /*
     // MARK: - Navigation
 
