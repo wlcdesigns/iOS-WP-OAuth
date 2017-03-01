@@ -20,6 +20,9 @@ import SwiftyJSON
 let url = "https://your-domain.com"
 let siteUrl = url+"/" //include forward slash at the end
 
+//Client Slug
+let clientSlug = "ios_wp_oauth"
+
 //OAuth Links
 let oauthLinks:[String:String] = [
     "authorize":siteUrl+"oauth/authorize",
@@ -226,7 +229,7 @@ struct wpOauth: wpOAuthProtocol, 🕵
         print("runOauth")
         
         Session.sharedInstance.ApiManager().request(siteUrl, method: .post, parameters: [
-            "ios_wp_oauth": 1,
+            clientSlug: 1,
             "response_type":"code"
             ]).validate().responseJSON { response in
                 
@@ -303,7 +306,7 @@ struct wpOauth: wpOAuthProtocol, 🕵
         }
         
         Session.sharedInstance.ApiManager().request(oauthLinks["refresh"]!, method: .post, parameters: [
-            "ios_wp_oauth": 2,
+            clientSlug: 2,
             "grant_type":"refresh_token",
             "refresh_token":refreshToken
             ]).validate().responseJSON { response in
